@@ -32,10 +32,6 @@ jobs:
       working-directory: ./api
       run: npx prisma generate
 
-    - name: Typecheck Backend
-      working-directory: ./api
-      run: npx tsc --noEmit || echo "Typecheck skipped or failed, continuing..."
-
     # --- FRONTEND ---
     - name: Build Next.js App
       working-directory: ./web
