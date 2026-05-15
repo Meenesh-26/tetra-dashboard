@@ -1,27 +1,32 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/app/actions/auth";
+import { api } from "@/lib/api";
 import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [orgName, setOrgName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
-    
-    const formData = new FormData(e.currentTarget);
-    const result = await signUp(formData);
-    
-    if (result?.error) {
-      setError(result.error);
+    setLoading(true);
+
+    try {
+      const response = await api.post("/auth/register", { orgName, email, password });
+      localStorage.setItem("tetra_token", response.data.token);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Failed to register");
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4">
@@ -37,12 +42,14 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleRegister} className="space-y-5">
           <div>
             <label className="mb-2 block text-sm font-medium text-zinc-300">Organization Name</label>
             <input
               type="text"
-              name="orgName"
+              value={orgName}
+              onChange={(e) => setOrgName(e.target.value)}
+              required
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
               placeholder="Acme Corp"
             />
@@ -52,7 +59,9 @@ export default function RegisterPage() {
             <label className="mb-2 block text-sm font-medium text-zinc-300">Admin Email</label>
             <input
               type="email"
-              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
               placeholder="admin@acme.com"
             />
@@ -62,7 +71,9 @@ export default function RegisterPage() {
             <label className="mb-2 block text-sm font-medium text-zinc-300">Password</label>
             <input
               type="password"
-              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-3 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
               placeholder="••••••••"
             />

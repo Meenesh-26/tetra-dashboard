@@ -1,12 +1,11 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { api } from "@/lib/api";
 import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,17 +17,11 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      
+      const response = await api.post("/auth/login", { email, password });
+      localStorage.setItem("tetra_token", response.data.token);
       router.push("/dashboard");
-      router.refresh();
     } catch (err: any) {
-      setError(err.message || "Failed to login");
+      setError(err.response?.data?.error || "Failed to login");
     } finally {
       setLoading(false);
     }

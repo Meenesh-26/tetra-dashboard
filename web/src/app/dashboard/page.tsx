@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { ArrowDownRight, ArrowUpRight, Plus, Trash2, Wallet, Receipt, Edit } from "lucide-react";
 import { format } from "date-fns";
-import { createClient } from "@/utils/supabase/client";
 
 type Transaction = {
   id: number;
@@ -13,7 +13,6 @@ type Transaction = {
 };
 
 export default function DashboardPage() {
-  const supabase = createClient();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -27,21 +26,10 @@ export default function DashboardPage() {
 
   const fetchTransactions = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const orgId = user.user_metadata.orgId;
-
-      const { data, error } = await supabase
-        .from("Transaction")
-        .select("*")
-        .eq("orgId", orgId)
-        .order("date", { ascending: false });
-
-      if (error) throw error;
-      setTransactions(data || []);
+      const res = await api.get("/transactions");
+      setTransactions(res.data);
     } catch (err) {
-      console.error("Failed to fetch transactions", err);
+      console.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
@@ -54,33 +42,19 @@ export default function DashboardPage() {
   const handleSubmitTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const orgId = user.user_metadata.orgId;
-
       const payload: any = {
         amount: parseFloat(amount),
         type,
         category,
-        orgId: orgId,
       };
-      
       if (date) {
         payload.date = new Date(date).toISOString();
       }
 
       if (editingTransaction) {
-        const { error } = await supabase
-          .from("Transaction")
-          .update(payload)
-          .eq("id", editingTransaction.id);
-        if (error) throw error;
+        await api.put(`/transactions/${editingTransaction.id}`, payload);
       } else {
-        const { error } = await supabase
-          .from("Transaction")
-          .insert(payload);
-        if (error) throw error;
+        await api.post("/transactions", payload);
       }
       
       setShowModal(false);
@@ -90,7 +64,7 @@ export default function DashboardPage() {
       setDate("");
       fetchTransactions();
     } catch (err) {
-      console.error("Failed to save transaction", err);
+      console.error("Failed to save transaction");
     }
   };
 
@@ -99,7 +73,7 @@ export default function DashboardPage() {
     setAmount(tx.amount.toString());
     setType(tx.type);
     setCategory(tx.category || "");
-    setDate(new Date(tx.date).toISOString().split('T')[0]); // Format for input type="date"
+    setDate(new Date(tx.date).toISOString().split('T')[0]);
     setShowModal(true);
   };
 
@@ -114,19 +88,26 @@ export default function DashboardPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const { error } = await supabase
-        .from("Transaction")
-        .delete()
-        .eq("id", id);
-      if (error) throw error;
+      await api.delete(`/transactions/${id}`);
       fetchTransactions();
     } catch (err) {
-      console.error("Failed to delete", err);
+      console.error("Failed to delete");
     }
   };
 
   const handleExport = async () => {
-    alert("Export feature will be available in the next update. For now, please use the Supabase dashboard.");
+    try {
+      const res = await api.get("/transactions/export", { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "transactions.csv");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Failed to export CSV");
+    }
   };
 
   const totalBalance = transactions.reduce((acc, curr) => {

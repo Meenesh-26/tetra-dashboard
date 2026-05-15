@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { ArrowDownRight, ArrowUpRight, Receipt, Trash2, Edit } from "lucide-react";
 import { format } from "date-fns";
-import { createClient } from "@/utils/supabase/client";
 
 type Transaction = {
   id: number;
@@ -13,7 +13,6 @@ type Transaction = {
 };
 
 export default function TransactionsPage() {
-  const supabase = createClient();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,21 +26,10 @@ export default function TransactionsPage() {
 
   const fetchTransactions = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const orgId = user.user_metadata.orgId;
-
-      const { data, error } = await supabase
-        .from("Transaction")
-        .select("*")
-        .eq("orgId", orgId)
-        .order("date", { ascending: false });
-
-      if (error) throw error;
-      setTransactions(data || []);
+      const res = await api.get("/transactions");
+      setTransactions(res.data);
     } catch (err) {
-      console.error("Failed to fetch transactions", err);
+      console.error("Failed to fetch transactions");
     } finally {
       setLoading(false);
     }
@@ -54,32 +42,19 @@ export default function TransactionsPage() {
   const handleSubmitTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const orgId = user.user_metadata.orgId;
-
       const payload: any = {
         amount: parseFloat(amount),
         type,
         category,
-        orgId,
       };
       if (date) {
         payload.date = new Date(date).toISOString();
       }
 
       if (editingTransaction) {
-        const { error } = await supabase
-          .from("Transaction")
-          .update(payload)
-          .eq("id", editingTransaction.id);
-        if (error) throw error;
+        await api.put(`/transactions/${editingTransaction.id}`, payload);
       } else {
-        const { error } = await supabase
-          .from("Transaction")
-          .insert(payload);
-        if (error) throw error;
+        await api.post("/transactions", payload);
       }
       
       setShowModal(false);
@@ -89,7 +64,7 @@ export default function TransactionsPage() {
       setDate("");
       fetchTransactions();
     } catch (err) {
-      console.error("Failed to save transaction", err);
+      console.error("Failed to save transaction");
     }
   };
 
@@ -104,19 +79,26 @@ export default function TransactionsPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const { error } = await supabase
-        .from("Transaction")
-        .delete()
-        .eq("id", id);
-      if (error) throw error;
+      await api.delete(`/transactions/${id}`);
       fetchTransactions();
     } catch (err) {
-      console.error("Failed to delete", err);
+      console.error("Failed to delete");
     }
   };
 
   const handleExport = async () => {
-    alert("Export feature will be available in the next update. For now, please use the Supabase dashboard.");
+    try {
+      const res = await api.get("/transactions/export", { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "transactions.csv");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Failed to export CSV");
+    }
   };
 
   return (
@@ -185,7 +167,9 @@ export default function TransactionsPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">Edit Transaction</h3>
+            <h3 className="text-xl font-bold text-white mb-6">
+              {editingTransaction ? "Edit Transaction" : "New Transaction"}
+            </h3>
             <form onSubmit={handleSubmitTransaction} className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-300">Type</label>
@@ -253,7 +237,7 @@ export default function TransactionsPage() {
                   type="submit"
                   className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-500 transition-colors"
                 >
-                  Save Changes
+                  {editingTransaction ? "Save Changes" : "Save Transaction"}
                 </button>
               </div>
             </form>
