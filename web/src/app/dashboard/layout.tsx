@@ -2,17 +2,31 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Receipt, Settings, LogOut, Activity } from "lucide-react";
+import { LayoutDashboard, Receipt, Settings, LogOut, Activity, Users } from "lucide-react";
+
+const parseJwt = (token: string) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return null;
+  }
+};
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
     const token = localStorage.getItem("tetra_token");
     if (!token) {
       router.push("/login");
+    } else {
+      const decoded = parseJwt(token);
+      if (decoded && decoded.role) {
+        setUserRole(decoded.role);
+      }
     }
   }, [router]);
 
@@ -33,7 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
         
         <nav className="flex-1 space-y-1 p-4">
-          <Link href="/dashboard" className="flex items-center gap-3 rounded-lg bg-indigo-500/10 px-3 py-2 text-indigo-400 transition-colors">
+          <Link href="/dashboard" className="flex items-center gap-3 rounded-lg px-3 py-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-white transition-colors">
             <LayoutDashboard className="h-5 w-5" />
             <span className="font-medium">Dashboard</span>
           </Link>
@@ -41,6 +55,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Receipt className="h-5 w-5" />
             <span className="font-medium">Transactions</span>
           </Link>
+          {userRole === "ADMIN" && (
+            <Link href="/dashboard/team" className="flex items-center gap-3 rounded-lg px-3 py-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-white transition-colors">
+              <Users className="h-5 w-5" />
+              <span className="font-medium">Team</span>
+            </Link>
+          )}
           <Link href="/dashboard/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-zinc-400 hover:bg-zinc-800/50 hover:text-white transition-colors">
             <Settings className="h-5 w-5" />
             <span className="font-medium">Settings</span>

@@ -10,6 +10,7 @@ import { pinoMiddleware } from "./middleware/logger";
 import { errorHandler } from "./middleware/errorHandler";
 import authRouter from "./routes/auth";
 import transactionsRouter from "./routes/transactions";
+import usersRouter from "./routes/users";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -24,6 +25,8 @@ app.use(pinoMiddleware);
 app.use("/api/auth", authRateLimiter, authRouter);
 // Mount the transaction routes
 app.use("/api/transactions", transactionsRouter);
+// Mount the user management routes
+app.use("/api/users", usersRouter);
 
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
