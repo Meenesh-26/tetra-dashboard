@@ -11,10 +11,10 @@ Follow these steps to take your project from your local machine to the live inte
    - It should look like: `postgresql://postgres:[PASSWORD]@db.[ID].supabase.co:5432/postgres`
 3. **Initialize Database:**
    Run this from your local machine to create the tables on Supabase:
-   ```bash
+   ```powershell
    cd api
    # Replace with your real Supabase URL
-   export DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[ID].supabase.co:5432/postgres"
+   $env:DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[ID].supabase.co:5432/postgres"
    npx prisma db push
    ```
 
