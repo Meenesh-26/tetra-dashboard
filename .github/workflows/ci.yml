@@ -23,10 +23,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        # We'll skip the cache for now until you commit a package-lock.json
 
     - name: Install Monorepo Dependencies
-      run: npm install
+      run: npm install --legacy-peer-deps --no-audit --no-fund
 
     # --- BACKEND ---
     - name: Generate Prisma Client
