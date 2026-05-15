@@ -1,18 +1,33 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Tetra Finance API – Express + Prisma + PostgreSQL",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
+    "start": "node dist/server.js",
     "lint": "eslint . --ext .ts",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
     "prisma:status": "prisma migrate status"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.20.0",
+    "pino": "^9.6.0",
+    "pino-http": "^11.0.0"
+  },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
@@ -23,13 +38,9 @@
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^10.3.0",
+    "pino-pretty": "^13.0.0",
+    "prisma": "^7.8.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@types/pino-http": "^5.8.4",
-    "pg": "^8.20.0",
-    "pino-http": "^11.0.0"
   }
 }

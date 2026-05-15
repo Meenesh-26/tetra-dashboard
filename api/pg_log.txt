@@ -66,3 +66,10 @@
 2026-05-15 11:56:50.763 IST [17992] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.534 s, sync=0.007 s, total=1.554 s; sync files=12, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/38EFA10, redo lsn=0/38EF9B8
 2026-05-15 12:06:49.782 IST [17992] LOG:  checkpoint starting: time
 2026-05-15 12:06:50.345 IST [17992] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.554 s, sync=0.002 s, total=0.564 s; sync files=6, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=2 kB; lsn=0/38EFFB8, redo lsn=0/38EFF60
+2026-05-15 12:11:49.353 IST [17992] LOG:  checkpoint starting: time
+2026-05-15 12:11:49.823 IST [17992] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.439 s, sync=0.002 s, total=0.471 s; sync files=5, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=2 kB; lsn=0/38F0490, redo lsn=0/38F0438
+2026-05-15 12:42:50.004 IST [14932] LOG:  could not open file "postmaster.pid": No such file or directory
+2026-05-15 12:42:50.005 IST [14932] LOG:  performing immediate shutdown because data directory lock file is invalid
+2026-05-15 12:42:50.005 IST [14932] LOG:  received immediate shutdown request
+2026-05-15 12:42:50.005 IST [14932] LOG:  could not open file "postmaster.pid": No such file or directory
+2026-05-15 12:42:50.048 IST [14932] LOG:  database system is shut down
