@@ -77,6 +77,43 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+// PUT /api/transactions/:id
+// Update a specific transaction
+router.put("/:id", async (req, res, next) => {
+  try {
+    const orgId = req.user!.orgId;
+    const transactionId = parseInt(req.params.id);
+    const { amount, type, category, date } = req.body;
+
+    // Verify the transaction belongs to the org
+    const existing = await prisma.transaction.findUnique({
+      where: { id: transactionId },
+    });
+
+    if (!existing || existing.orgId !== orgId) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+
+    if (amount === undefined || !type) {
+      return res.status(400).json({ error: "Amount and type are required" });
+    }
+
+    const updatedTransaction = await prisma.transaction.update({
+      where: { id: transactionId },
+      data: {
+        amount,
+        type,
+        category,
+        date: date ? new Date(date) : existing.date,
+      },
+    });
+
+    res.json(updatedTransaction);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // DELETE /api/transactions/:id
 // Delete a specific transaction
 router.delete("/:id", async (req, res, next) => {

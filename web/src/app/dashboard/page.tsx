@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { ArrowDownRight, ArrowUpRight, Plus, Trash2, Wallet, Receipt } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Plus, Trash2, Wallet, Receipt, Edit } from "lucide-react";
 import { format } from "date-fns";
 
 type Transaction = {
@@ -18,9 +18,11 @@ export default function DashboardPage() {
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<"income" | "expense">("expense");
   const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
 
   const fetchTransactions = async () => {
     try {
@@ -37,21 +39,51 @@ export default function DashboardPage() {
     fetchTransactions();
   }, []);
 
-  const handleCreateTransaction = async (e: React.FormEvent) => {
+  const handleSubmitTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post("/transactions", {
+      const payload: any = {
         amount: parseFloat(amount),
         type,
         category,
-      });
+      };
+      if (date) {
+        payload.date = new Date(date).toISOString();
+      }
+
+      if (editingTransaction) {
+        await api.put(`/transactions/${editingTransaction.id}`, payload);
+      } else {
+        await api.post("/transactions", payload);
+      }
+      
       setShowModal(false);
+      setEditingTransaction(null);
       setAmount("");
       setCategory("");
+      setDate("");
       fetchTransactions();
     } catch (err) {
-      console.error("Failed to create transaction");
+      console.error("Failed to save transaction");
     }
+  };
+
+  const handleEditClick = (tx: Transaction) => {
+    setEditingTransaction(tx);
+    setAmount(tx.amount.toString());
+    setType(tx.type);
+    setCategory(tx.category || "");
+    setDate(new Date(tx.date).toISOString().split('T')[0]); // Format for input type="date"
+    setShowModal(true);
+  };
+
+  const handleAddNewClick = () => {
+    setEditingTransaction(null);
+    setAmount("");
+    setType("expense");
+    setCategory("");
+    setDate(new Date().toISOString().split('T')[0]);
+    setShowModal(true);
   };
 
   const handleDelete = async (id: number) => {
@@ -101,7 +133,7 @@ export default function DashboardPage() {
             Export CSV
           </button>
           <button 
-            onClick={() => setShowModal(true)}
+            onClick={handleAddNewClick}
             className="flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-500 transition-all active:scale-[0.98]"
           >
             <Plus className="h-4 w-4" />
@@ -163,12 +195,20 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className={`font-semibold ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <span className={`font-semibold mr-2 ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
                       {tx.type === 'income' ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)}
                     </span>
                     <button 
+                      onClick={() => handleEditClick(tx)}
+                      className="text-zinc-600 hover:text-indigo-400 opacity-0 group-hover:opacity-100 transition-all"
+                      title="Edit"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </button>
+                    <button 
                       onClick={() => handleDelete(tx.id)}
                       className="text-zinc-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                      title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -180,12 +220,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Create Transaction Modal */}
+      {/* Create/Edit Transaction Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-6">New Transaction</h3>
-            <form onSubmit={handleCreateTransaction} className="space-y-4">
+            <h3 className="text-xl font-bold text-white mb-6">
+              {editingTransaction ? "Edit Transaction" : "New Transaction"}
+            </h3>
+            <form onSubmit={handleSubmitTransaction} className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-300">Type</label>
                 <div className="grid grid-cols-2 gap-2">
@@ -205,17 +247,29 @@ export default function DashboardPage() {
                   </button>
                 </div>
               </div>
-              <div>
-                <label className="mb-2 block text-sm font-medium text-zinc-300">Amount ($)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  required
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
-                  placeholder="0.00"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-zinc-300">Amount ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    required
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-zinc-300">Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800/50 px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none [color-scheme:dark]"
+                  />
+                </div>
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-300">Category</label>
@@ -240,7 +294,7 @@ export default function DashboardPage() {
                   type="submit"
                   className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/30 hover:bg-indigo-500 transition-colors"
                 >
-                  Save Transaction
+                  {editingTransaction ? "Save Changes" : "Save Transaction"}
                 </button>
               </div>
             </form>
