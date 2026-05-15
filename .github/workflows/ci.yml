@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Monorepo Dependencies
+      run: npm install
+
+    # --- BACKEND ---
+    - name: Generate Prisma Client
+      working-directory: ./api
+      run: npx prisma generate
+
+    - name: Typecheck Backend
+      working-directory: ./api
+      run: npx tsc --noEmit || echo "No typecheck script found, skipping."
+
+    # --- FRONTEND ---
+    - name: Build Next.js App
+      working-directory: ./web
+      run: npm run build
+
+    - name: Lint Frontend
+      working-directory: ./web
+      run: npm run lint

@@ -1,0 +1,68 @@
+2026-05-15 11:21:10.833 IST [20660] LOG:  starting PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35226, 64-bit
+2026-05-15 11:21:10.841 IST [20660] LOG:  listening on IPv6 address "::1", port 5432
+2026-05-15 11:21:10.841 IST [20660] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-05-15 11:21:10.918 IST [7192] LOG:  database system was shut down at 2026-05-15 11:21:00 IST
+2026-05-15 11:21:10.925 IST [20660] LOG:  database system is ready to accept connections
+2026-05-15 11:24:33.830 IST [21616] ERROR:  canceling statement due to user request
+2026-05-15 11:24:33.831 IST [20660] LOG:  received fast shutdown request
+2026-05-15 11:24:33.830 IST [6432] LOG:  shutting down
+2026-05-15 11:24:33.832 IST [6432] LOG:  checkpoint starting: shutdown immediate
+2026-05-15 11:24:33.832 IST [20660] LOG:  aborting any active transactions
+2026-05-15 11:24:33.848 IST [20660] LOG:  background worker "logical replication launcher" (PID 21616) exited with exit code 1
+2026-05-15 11:24:33.951 IST [6432] LOG:  checkpoint complete: wrote 1030 buffers (6.3%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.046 s, sync=0.065 s, total=0.120 s; sync files=314, longest=0.001 s, average=0.001 s; distance=5001 kB, estimate=5001 kB; lsn=0/1CD3860, redo lsn=0/1CD3860
+2026-05-15 11:24:34.766 IST [20660] LOG:  database system is shut down
+2026-05-15 11:28:16.162 IST [21252] LOG:  starting PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35226, 64-bit
+2026-05-15 11:28:16.170 IST [21252] LOG:  listening on IPv6 address "::1", port 5432
+2026-05-15 11:28:16.170 IST [21252] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-05-15 11:28:16.256 IST [17552] LOG:  database system was shut down at 2026-05-15 11:24:33 IST
+2026-05-15 11:28:16.315 IST [21252] LOG:  database system is ready to accept connections
+2026-05-15 11:28:25.953 IST [5088] ERROR:  relation "_prisma_migrations" does not exist at character 126
+2026-05-15 11:28:25.953 IST [5088] STATEMENT:  SELECT "id", "checksum", "finished_at", "migration_name", "logs", "rolled_back_at", "started_at", "applied_steps_count" FROM "_prisma_migrations" ORDER BY "started_at" ASC
+2026-05-15 11:28:26.446 IST [21612] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:28:26.459 IST [21612] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.002 s, total=0.013 s; sync files=5, longest=0.001 s, average=0.001 s; distance=4673 kB, estimate=4673 kB; lsn=0/2163D68, redo lsn=0/2163D10
+2026-05-15 11:28:27.006 IST [21612] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:28:27.015 IST [21612] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.009 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4673 kB, estimate=4673 kB; lsn=0/25F43E8, redo lsn=0/25F4390
+2026-05-15 11:33:27.020 IST [21612] LOG:  checkpoint starting: time
+2026-05-15 11:33:35.657 IST [21612] LOG:  checkpoint complete: wrote 78 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=8.609 s, sync=0.010 s, total=8.638 s; sync files=66, longest=0.002 s, average=0.001 s; distance=328 kB, estimate=4239 kB; lsn=0/2646650, redo lsn=0/26465C0
+2026-05-15 11:35:14.153 IST [21612] LOG:  shutting down
+2026-05-15 11:35:14.153 IST [23136] ERROR:  canceling statement due to user request
+2026-05-15 11:35:14.157 IST [21612] LOG:  checkpoint starting: shutdown immediate
+2026-05-15 11:35:14.186 IST [21252] LOG:  background worker "logical replication launcher" (PID 23136) exited with exit code 1
+2026-05-15 11:35:14.188 IST [21612] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 0 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.036 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=3815 kB; lsn=0/2646700, redo lsn=0/2646700
+2026-05-15 11:35:14.196 IST [21252] LOG:  received fast shutdown request
+2026-05-15 11:35:14.196 IST [21252] LOG:  aborting any active transactions
+2026-05-15 11:35:14.253 IST [21252] LOG:  WAL was shut down unexpectedly
+2026-05-15 11:35:14.272 IST [21252] LOG:  abnormal database system shutdown
+2026-05-15 11:35:14.284 IST [21252] LOG:  database system is shut down
+2026-05-15 11:35:39.019 IST [8864] LOG:  starting PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35226, 64-bit
+2026-05-15 11:35:39.025 IST [8864] LOG:  listening on IPv6 address "::1", port 5432
+2026-05-15 11:35:39.025 IST [8864] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-05-15 11:35:39.105 IST [23292] LOG:  database system was shut down at 2026-05-15 11:35:14 IST
+2026-05-15 11:35:39.115 IST [8864] LOG:  database system is ready to accept connections
+2026-05-15 11:35:48.657 IST [20928] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:35:48.670 IST [20928] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.003 s, total=0.014 s; sync files=7, longest=0.001 s, average=0.001 s; distance=4781 kB, estimate=4781 kB; lsn=0/2AF1B60, redo lsn=0/2AF1B08
+2026-05-15 11:35:49.251 IST [20928] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:35:49.262 IST [20928] LOG:  checkpoint complete: wrote 13 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.003 s, total=0.012 s; sync files=11, longest=0.001 s, average=0.001 s; distance=4805 kB, estimate=4805 kB; lsn=0/2FA30E8, redo lsn=0/2FA3090
+2026-05-15 11:36:01.063 IST [20928] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:36:01.077 IST [20928] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.002 s, total=0.014 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4758 kB, estimate=4800 kB; lsn=0/3448B50, redo lsn=0/3448AF8
+2026-05-15 11:36:02.109 IST [20928] LOG:  checkpoint starting: immediate force wait
+2026-05-15 11:36:02.120 IST [20928] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.011 s; sync files=4, longest=0.001 s, average=0.001 s; distance=4758 kB, estimate=4796 kB; lsn=0/38EE670, redo lsn=0/38EE618
+2026-05-15 11:41:02.124 IST [20928] LOG:  checkpoint starting: time
+2026-05-15 11:41:02.252 IST [20928] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.106 s, sync=0.002 s, total=0.128 s; sync files=2, longest=0.001 s, average=0.001 s; distance=2 kB, estimate=4317 kB; lsn=0/38EEFC0, redo lsn=0/38EEF68
+2026-05-15 11:41:48.374 IST [22168] ERROR:  canceling statement due to user request
+2026-05-15 11:41:48.374 IST [20928] LOG:  shutting down
+2026-05-15 11:41:48.375 IST [8864] LOG:  received fast shutdown request
+2026-05-15 11:41:48.375 IST [20928] LOG:  checkpoint starting: shutdown immediate
+2026-05-15 11:41:48.375 IST [8864] LOG:  aborting any active transactions
+2026-05-15 11:41:48.392 IST [20928] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 0 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.018 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=3885 kB; lsn=0/38EF070, redo lsn=0/38EF070
+2026-05-15 11:41:48.398 IST [8864] LOG:  background worker "logical replication launcher" (PID 22168) exited with exit code 1
+2026-05-15 11:41:48.562 IST [8864] LOG:  database system is shut down
+2026-05-15 11:51:49.094 IST [14932] LOG:  starting PostgreSQL 18.4 on x86_64-windows, compiled by msvc-19.44.35226, 64-bit
+2026-05-15 11:51:49.102 IST [14932] LOG:  listening on IPv6 address "::1", port 5432
+2026-05-15 11:51:49.102 IST [14932] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-05-15 11:51:49.201 IST [6804] LOG:  database system was shut down at 2026-05-15 11:41:48 IST
+2026-05-15 11:51:49.211 IST [14932] LOG:  database system is ready to accept connections
+2026-05-15 11:56:49.209 IST [17992] LOG:  checkpoint starting: time
+2026-05-15 11:56:50.763 IST [17992] LOG:  checkpoint complete: wrote 14 buffers (0.1%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=1.534 s, sync=0.007 s, total=1.554 s; sync files=12, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/38EFA10, redo lsn=0/38EF9B8
+2026-05-15 12:06:49.782 IST [17992] LOG:  checkpoint starting: time
+2026-05-15 12:06:50.345 IST [17992] LOG:  checkpoint complete: wrote 5 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.554 s, sync=0.002 s, total=0.564 s; sync files=6, longest=0.001 s, average=0.001 s; distance=1 kB, estimate=2 kB; lsn=0/38EFFB8, redo lsn=0/38EFF60
