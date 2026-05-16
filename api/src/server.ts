@@ -28,6 +28,10 @@ app.use("/api/transactions", transactionsRouter);
 // Mount the user management routes
 app.use("/api/users", usersRouter);
 
+app.get("/", (_req: Request, res: Response) => {
+  res.json({ message: "Tetra Financial API is running", version: "1.0.0" });
+});
+
 app.get("/health", (_req: Request, res: Response) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
